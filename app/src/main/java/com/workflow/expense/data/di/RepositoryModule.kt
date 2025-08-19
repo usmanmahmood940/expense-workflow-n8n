@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<SmsRepository> { SmsRepositoryImpl(get()) }
+    single<SmsRepository> { SmsRepositoryImpl(get(),get()) }
     single { SmsForwarder(get(),get()) }
 }
 

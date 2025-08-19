@@ -22,8 +22,9 @@ val networkModule = module {
             .build()
     }
     single {
+        val sharedPrefRepo = get<com.workflow.expense.domain.repository.SharedPrefRepo>()
         Retrofit.Builder()
-            .baseUrl(BuildConfig.API_BASE_URL)
+            .baseUrl(sharedPrefRepo.baseUrl ?: BuildConfig.API_BASE_URL)
             .client(get())
             .addConverterFactory(GsonConverterFactory.create(get()))
             .build()

@@ -18,7 +18,7 @@ class SmsViewModel(
     private val sharedPrefRepo: SharedPrefRepo,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SmsState(lastFrom = sharedPrefRepo.bankNumber?:""))
+    private val _state = MutableStateFlow(SmsState())
     val state: StateFlow<SmsState> = _state
 
     init {
@@ -45,13 +45,20 @@ class SmsViewModel(
     fun dispatch(intent: SmsIntent) {
         when (intent) {
             is SmsIntent.ToggleForwarding -> toggleForwarding(intent.enabled)
-            SmsIntent.RequestPermissions -> {
-                // no-op here; the UI will handle requesting
-            }
 
-            is SmsIntent.SendManualSms -> forwarder.onIncomingSms(intent.from,intent.message)
-            is SmsIntent.SetBankNumber -> {
-                sharedPrefRepo.bankNumber=intent.number
+            is SmsIntent.SendLogExpense -> forwarder.onIncomingSms(intent.from, intent.message)
+            is SmsIntent.SetBankNumbers -> {
+                sharedPrefRepo.bankNumber = intent.numbers
+                // Update state with saved numbers
+                _state.update {
+                    it.copy(savedBankNumbers = intent.numbers)
+                }
+            }
+            SmsIntent.LoadSavedBankNumbers -> {
+                val savedNumbers = sharedPrefRepo.bankNumber ?: emptyList()
+                _state.update {
+                    it.copy(savedBankNumbers = savedNumbers)
+                }
             }
         }
     }

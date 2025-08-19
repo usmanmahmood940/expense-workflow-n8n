@@ -35,7 +35,6 @@ class SmsReceiver : BroadcastReceiver() {
         val originatingAddress = messages.firstOrNull()?.displayOriginatingAddress ?: return
         val messageBody = messages.joinToString(separator = "") { it.displayMessageBody }
 
-        // Delegate to forwarder; it will filter and send on background.
         smsForwarder.onIncomingSms(originatingAddress, messageBody)
     }
 }

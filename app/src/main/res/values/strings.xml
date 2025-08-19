@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Obit</string>
+    <string name="sms_expense_tracker">SMS Expense Tracker</string>
+    <string name="turn_bank_alerts">Turn bank alerts into smart expense tracking</string>
+    <string name="permissions_granted">Permissions Granted</string>
+    <string name="permissions_required">Permissions Required</string>
+    <string name="sms_access_enabled">SMS access is enabled</string>
+    <string name="enable_sms_access">Enable SMS access to continue</string>
+    <string name="grant">Grant</string>
+    <string name="bank_numbers">Bank Numbers</string>
+    <string name="numbers_saved">✓ %1$d numbers saved</string>
+    <string name="no_numbers_saved_yet">No numbers saved yet</string>
+    <string name="latest_message">Latest Message</string>
+    <string name="save_numbers">Save Numbers</string>
+    <string name="update_numbers">Update Numbers</string>
+    <string name="add">Add</string>
+    <string name="bank_number">Bank Number</string>
+    <string name="enter_bank_number">Enter bank number</string>
+    <string name="delete">Delete</string>
 </resources>

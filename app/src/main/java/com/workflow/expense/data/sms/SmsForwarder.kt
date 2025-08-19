@@ -35,10 +35,13 @@ class SmsForwarder(
 
     fun onIncomingSms(from: String, body: String) {
         if (!forwardingEnabled) return
-        val expected = prefsRepo.bankNumber
-        expected?.let {
-            if (!from.contains(expected)) return
-        }?:return
+        val expectedNumbers = prefsRepo.bankNumber
+        if (expectedNumbers.isNullOrEmpty()) return
+
+        val isFromExpectedNumber = expectedNumbers.any { expected ->
+            from.equals(expected, ignoreCase = true)
+        }
+        if (!isFromExpectedNumber) return
 
         val entity = SmsMessageEntity(
             message = body,

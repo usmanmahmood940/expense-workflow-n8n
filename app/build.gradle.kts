@@ -74,6 +74,10 @@ dependencies {
     // Lifecycle VM compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.navigation.compose)
+    //noinspection UseTomlInstead
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+    implementation(libs.androidx.tv.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
