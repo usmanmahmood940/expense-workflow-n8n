@@ -26,12 +26,14 @@ fun LogExpenseScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current // For Toasts or other context needs
+    val message = uiState.messageBody
 
     // Effect to show a message when sendSuccess changes or an error occurs
     LaunchedEffect(uiState.sendSuccess, uiState.errorMessage) {
         if (uiState.sendSuccess) {
             // Show a Snackbar or Toast
             Toast.makeText(context, "Message Sent!", Toast.LENGTH_SHORT).show()
+
             println("Message Sent Successfully from UI!") // Placeholder
             viewModel.processIntent(LogExpenseIntent.ResetStatus) // Reset for next time
         }
@@ -102,6 +104,8 @@ fun LogExpenseScreen(
                     }
                 }
             }
+
+            Text(uiState.messageBody, modifier = Modifier.padding(10.dp))
         }
     }
 }

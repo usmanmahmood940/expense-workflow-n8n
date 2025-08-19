@@ -54,7 +54,7 @@ class LogExpenseViewModel(
                     state.copy(
                         isSending = false,
                         sendSuccess = true,
-                        messageBody = ""  // Clear fields on success
+                        messageBody = it  // Clear fields on success
                     )
                 }
             }.onFailure { exception ->
