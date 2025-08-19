@@ -9,7 +9,6 @@ class SharedPrefRepoImpl(private val sharedPreferences: SharedPreferences) : Sha
     companion object {
         private const val KEY_BANK_NUMBER = "bank_number"
         private const val KEY_BASE_URL = "base_url"
-        private const val KEY_API_URL = "api_url"
         private const val DEFAULT_API_URL = "e0a3a07e-70ff-4901-805a-8c01315fec91"
     }
 
@@ -33,11 +32,11 @@ class SharedPrefRepoImpl(private val sharedPreferences: SharedPreferences) : Sha
             sharedPreferences.edit { putString(KEY_BASE_URL, value) }
         }
 
-    override var apiUrl: String?
-        get() = sharedPreferences.getString(KEY_API_URL, DEFAULT_API_URL)
-        set(value) {
-            sharedPreferences.edit { putString(KEY_API_URL, value) }
-        }
+//    override var apiUrl: String?
+//        get() = sharedPreferences.getString(KEY_API_URL, DEFAULT_API_URL)
+//        set(value) {
+//            sharedPreferences.edit { putString(KEY_API_URL, value) }
+//        }
 
     override fun clearBankNumber() {
         sharedPreferences.edit { remove(KEY_BANK_NUMBER) }

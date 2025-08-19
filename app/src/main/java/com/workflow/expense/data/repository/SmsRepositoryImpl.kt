@@ -12,7 +12,7 @@ class SmsRepositoryImpl(
     private val sharedPref: SharedPrefRepo
 ) : SmsRepository {
     override suspend fun forwardSms(message: SmsMessageEntity): Result<String> = try {
-        val response = api.forwardSms(sharedPref.apiUrl?:"e0a3a07e-70ff-4901-805a-8c01315fec91",ForwardSmsRequest(message = message.message))
+        val response = api.forwardSms("",ForwardSmsRequest(message = message.message))
         if (response.isSuccessful) Result.success(response.body()?.message?:message.message) else Result.failure(IllegalStateException("HTTP ${'$'}{response.code()}"))
     } catch (t: Throwable) {
         Result.failure(t)

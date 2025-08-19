@@ -11,6 +11,6 @@ data class ForwardSmsRequest(
 )
 
 interface ApiService {
-    @POST
-    suspend fun forwardSms(@Url url: String, @Body body: ForwardSmsRequest): Response<ForwardSmsRequest>
+    @POST("")
+    suspend fun forwardSms( @Url url: String,@Body body: ForwardSmsRequest): Response<ForwardSmsRequest>
 }

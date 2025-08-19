@@ -19,7 +19,6 @@ import org.koin.compose.koinInject
 fun SettingsScreen() {
     val sharedPrefRepo = koinInject<SharedPrefRepo>()
     var baseUrl by remember { mutableStateOf(sharedPrefRepo.baseUrl ?: "") }
-    var apiUrl by remember { mutableStateOf(sharedPrefRepo.apiUrl ?: "") }
 
     Column(
         modifier = Modifier
@@ -38,7 +37,7 @@ fun SettingsScreen() {
         OutlinedTextField(
             value = baseUrl,
             onValueChange = { baseUrl = it },
-            label = { Text("Base URL") },
+            label = { Text("Workflow Url") },
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 120.dp), // Make message field taller
@@ -47,22 +46,10 @@ fun SettingsScreen() {
                 imeAction = ImeAction.Done // Or ImeAction.Send if you want keyboard send
             ),
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = apiUrl,
-            onValueChange = { apiUrl = it },
-            label = { Text("API URL") },
-            modifier = Modifier
-                .fillMaxWidth(),// Make message field taller
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done // Or ImeAction.Send if you want keyboard send
-            ),
-        )
+
         Spacer(modifier = Modifier.height(30.dp))
         Button(onClick = {
             sharedPrefRepo.baseUrl = baseUrl
-            sharedPrefRepo.apiUrl = apiUrl
         }, modifier = Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.padding(10.dp)) {
                 Text("Save")

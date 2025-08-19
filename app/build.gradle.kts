@@ -16,7 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val baseUrl = "https://usmannsiddiqui.app.n8n.cloud/webhook/"
+        val baseUrl = "https://usmannsiddiqui.app.n8n.cloud/webhook/e0a3a07e-70ff-4901-805a-8c01315fec91/"
         buildConfigField("String", "API_BASE_URL", "\"$baseUrl\"")
     }
 
