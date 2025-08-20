@@ -1,6 +1,7 @@
 package com.workflow.expense.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -64,7 +65,8 @@ fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
         Button(
             onClick = { viewModel.dispatch(SettingsIntent.SaveBaseUrl) },
             modifier = Modifier.fillMaxWidth(),
-            enabled = !state.isLoading
+            enabled = !state.isLoading,
+                shape = RoundedCornerShape(20.dp),
         ) {
             Row(modifier = Modifier.padding(10.dp)) {
                 if (state.isLoading) {

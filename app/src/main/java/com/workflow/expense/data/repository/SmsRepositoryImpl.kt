@@ -15,7 +15,10 @@ class SmsRepositoryImpl(
     private val sharedPref: SharedPrefRepo
 ) : SmsRepository {
     override suspend fun forwardSms(message: SmsMessageEntity): ApiResult<List<TransactionDetail>> =
-        safeApiCall { api.forwardSms("", ForwardSmsRequest(message.message)) }
+        safeApiCall {
+            val base = sharedPref.baseUrl ?: ""
+            api.forwardSms(base, ForwardSmsRequest(message.message))
+        }
 
 }
 

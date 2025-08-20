@@ -372,7 +372,7 @@ fun SmsScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Enhanced Latest Message Section
-                if (state.latestMessage.isNotBlank()) {
+                if (false) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp),

@@ -3,6 +3,7 @@ package com.workflow.expense.ui
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -85,7 +86,8 @@ fun LogExpenseScreen(
             Button(
                 onClick = { viewModel.dispatch(LogExpenseIntent.SendMessage) },
                 enabled = !uiState.isSending,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
             ) {
                 Row(modifier = Modifier.padding(10.dp)) {
                     if (uiState.isSending) {
@@ -99,10 +101,10 @@ fun LogExpenseScreen(
                 }
             }
 
-            if (uiState.sendSuccess)
-            uiState.apiResponse?.let {
-                Text(it, modifier = Modifier.padding(10.dp))
-            }
+//            if (uiState.sendSuccess)
+//            uiState.apiResponse?.let {
+//                Text(it, modifier = Modifier.padding(10.dp))
+//            }
         }
     }
 }
