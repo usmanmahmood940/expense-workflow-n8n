@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
     single<SmsRepository> { SmsRepositoryImpl(get(),get()) }
-    single { SmsForwarder(get(),get()) }
+    single { SmsForwarder(get(),get(),get()) }
 }
 
 val useCaseModule = module {
