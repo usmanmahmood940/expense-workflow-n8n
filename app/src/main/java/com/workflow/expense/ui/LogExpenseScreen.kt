@@ -14,7 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.workflow.expense.presentation.LogExpenseViewModel
+import com.workflow.expense.presentation.viewmodel.LogExpenseViewModel
+import com.workflow.expense.presentation.mvi.LogExpenseEffect
 import com.workflow.expense.presentation.mvi.LogExpenseIntent
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
@@ -24,24 +25,17 @@ import org.koin.androidx.compose.koinViewModel
 fun LogExpenseScreen(
     viewModel: LogExpenseViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current // For Toasts or other context needs
     val message = uiState.messageBody
 
     // Effect to show a message when sendSuccess changes or an error occurs
-    LaunchedEffect(uiState.sendSuccess, uiState.errorMessage) {
-        if (uiState.sendSuccess) {
-            // Show a Snackbar or Toast
-            Toast.makeText(context, "Message Sent!", Toast.LENGTH_SHORT).show()
-
-            println("Message Sent Successfully from UI!") // Placeholder
-            viewModel.processIntent(LogExpenseIntent.ResetStatus) // Reset for next time
-        }
-        uiState.errorMessage?.let {
-            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-            println("Error from UI: $it") // Placeholder
-            // Optionally reset error after showing it, or let it persist until next input change
-            viewModel.processIntent(LogExpenseIntent.ResetStatus) // Or a specific ResetError intent
+    LaunchedEffect(Unit) {
+        viewModel.effect.collectLatest { effect ->
+            when (effect) {
+                is LogExpenseEffect.MessageSent -> Toast.makeText(context, "Message Sent!", Toast.LENGTH_SHORT).show()
+                is LogExpenseEffect.ShowError -> Toast.makeText(context, effect.message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -74,7 +68,7 @@ fun LogExpenseScreen(
         ) {
             OutlinedTextField(
                 value = uiState.messageBody,
-                onValueChange = { viewModel.processIntent(LogExpenseIntent.UpdateMessageBody(it)) },
+                onValueChange = { viewModel.dispatch(LogExpenseIntent.UpdateMessageBody(it)) },
                 label = { Text("Type Bank Message") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -89,7 +83,7 @@ fun LogExpenseScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = { viewModel.processIntent(LogExpenseIntent.SendMessage) },
+                onClick = { viewModel.dispatch(LogExpenseIntent.SendMessage) },
                 enabled = !uiState.isSending,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -105,7 +99,10 @@ fun LogExpenseScreen(
                 }
             }
 
-            Text(uiState.messageBody, modifier = Modifier.padding(10.dp))
+            if (uiState.sendSuccess)
+            uiState.apiResponse?.let {
+                Text(it, modifier = Modifier.padding(10.dp))
+            }
         }
     }
 }

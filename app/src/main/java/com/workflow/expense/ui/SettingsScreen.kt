@@ -9,16 +9,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.workflow.expense.domain.repository.SharedPrefRepo
-import com.workflow.expense.presentation.mvi.LogExpenseIntent
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.workflow.expense.presentation.viewmodel.SettingsViewModel
+import com.workflow.expense.presentation.mvi.SettingsEffect
+import com.workflow.expense.presentation.mvi.SettingsIntent
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.LocalKoinScope
-import org.koin.compose.koinInject
 
 @Composable
-fun SettingsScreen() {
-    val sharedPrefRepo = koinInject<SharedPrefRepo>()
-    var baseUrl by remember { mutableStateOf(sharedPrefRepo.baseUrl ?: "") }
+fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is SettingsEffect.SavedSuccessfully -> { /* Could show a snackbar */ }
+                is SettingsEffect.ShowError -> { /* Could show a snackbar with effect.message */ }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -35,26 +43,39 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = baseUrl,
-            onValueChange = { baseUrl = it },
+            value = state.baseUrlInput,
+            onValueChange = { viewModel.dispatch(SettingsIntent.UpdateBaseUrlInput(it)) },
             label = { Text("Workflow Url") },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 120.dp), // Make message field taller
+                .heightIn(min = 120.dp),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done // Or ImeAction.Send if you want keyboard send
+                imeAction = ImeAction.Done
             ),
+            isError = state.errorMessage != null
         )
-
-        Spacer(modifier = Modifier.height(30.dp))
-        Button(onClick = {
-            sharedPrefRepo.baseUrl = baseUrl
-        }, modifier = Modifier.fillMaxWidth()) {
-            Row(modifier = Modifier.padding(10.dp)) {
-                Text("Save")
-            }
+        if (state.errorMessage != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(state.errorMessage ?: "", color = MaterialTheme.colorScheme.error)
         }
 
+        Spacer(modifier = Modifier.height(30.dp))
+        Button(
+            onClick = { viewModel.dispatch(SettingsIntent.SaveBaseUrl) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading
+        ) {
+            Row(modifier = Modifier.padding(10.dp)) {
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp
+                    )
+                    Spacer(Modifier.width(8.dp))
+                }
+                Text(if (state.saveSuccess) "Saved" else "Save")
+            }
+        }
     }
 }

@@ -61,7 +61,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.workflow.expense.R
-import com.workflow.expense.presentation.SmsViewModel
+import com.workflow.expense.presentation.viewmodel.SmsViewModel
+import com.workflow.expense.presentation.mvi.SmsEffect
 import com.workflow.expense.presentation.mvi.SmsIntent
 import org.koin.androidx.compose.koinViewModel
 
@@ -76,8 +77,15 @@ fun SmsScreen(
     var bankNumbers by remember { mutableStateOf(listOf("")) }
 
     // Load saved bank numbers on initialization
+    LaunchedEffect(Unit) { viewModel.dispatch(SmsIntent.LoadSavedBankNumbers) }
+
     LaunchedEffect(Unit) {
-        viewModel.dispatch(SmsIntent.LoadSavedBankNumbers)
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is SmsEffect.SavedBankNumbers -> { /* could show snackbar */ }
+                is SmsEffect.ShowError -> { /* hook into a snackbar host if desired */ }
+            }
+        }
     }
 
     // Update local state when saved numbers are loaded

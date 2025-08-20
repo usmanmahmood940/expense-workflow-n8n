@@ -2,7 +2,9 @@ package com.workflow.expense.data.sms
 
 import android.util.Log
 import com.workflow.expense.BuildConfig
+import com.workflow.expense.domain.model.ApiResult
 import com.workflow.expense.domain.model.SmsMessageEntity
+import com.workflow.expense.domain.model.TransactionDetail
 import com.workflow.expense.domain.repository.SharedPrefRepo
 import com.workflow.expense.domain.usecase.ForwardLatestSmsUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -21,13 +23,9 @@ class SmsForwarder(
     @Volatile
     private var forwardingEnabled: Boolean = true
 
-    sealed class ForwardEvent {
-        data class Success(val from: String, val body: String) : ForwardEvent()
-        data class Error(val from: String, val body: String, val error: String?) : ForwardEvent()
-    }
 
-    private val _events = MutableSharedFlow<ForwardEvent>()
-    val events: SharedFlow<ForwardEvent> = _events
+    private val _events = MutableSharedFlow<ApiResult<List<TransactionDetail>>>()
+    val events: SharedFlow<ApiResult<List<TransactionDetail>>> = _events
 
     fun setForwardingEnabled(enabled: Boolean) {
         forwardingEnabled = enabled
@@ -49,13 +47,7 @@ class SmsForwarder(
 
         backgroundScope.launch {
             val result = forwardLatestSmsUseCase(entity)
-            result.onSuccess {
-                Log.i("SmsForwarder", "Forwarded SMS from $from")
-                _events.emit(ForwardEvent.Success(from, it))
-            }.onFailure {
-                Log.e("SmsForwarder", "Failed to forward SMS", it)
-                _events.emit(ForwardEvent.Error(from, body, it.message))
-            }
+            _events.emit(result)
         }
     }
 }

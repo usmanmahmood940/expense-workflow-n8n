@@ -24,4 +24,9 @@ sealed class SmsIntent {
     object LoadSavedBankNumbers : SmsIntent() // Add this line
 }
 
+sealed class SmsEffect {
+    object SavedBankNumbers : SmsEffect()
+    data class ShowError(val message: String) : SmsEffect()
+}
+
 

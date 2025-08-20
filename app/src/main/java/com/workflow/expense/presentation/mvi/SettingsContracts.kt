@@ -15,3 +15,9 @@ sealed class SettingsIntent {
 
     object ResetSaveStatus : SettingsIntent()                         // To reset saveSuccess for UI
 }
+
+// One-off actions that the UI should react to once (e.g., Toasts/Snackbars, navigation)
+sealed class SettingsEffect {
+    object SavedSuccessfully : SettingsEffect()
+    data class ShowError(val message: String) : SettingsEffect()
+}
